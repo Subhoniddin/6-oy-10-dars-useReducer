@@ -9,6 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
+
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import {
@@ -18,12 +19,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+
 import { Checkbox } from "./ui/checkbox";
 import { toast } from "sonner";
+import { postData } from "../requests";
+import { Context } from "../context/index"
+import { useContext } from "react";
 
-export function DialogDemo({newPostData}) {
+export function DialogDemo() {
   const [open, setOpen] = useState(false);
+  const {state, dispatch} = useContext(Context)
   
+  function newPostData(data) {
+    postData(data).then(res => {
+        dispatch({type: 'SET_DATA', payload: [res]})
+        toast.success('Malumot qoshildi')
+    })
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
