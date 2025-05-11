@@ -5,6 +5,7 @@
   import { useContext, useEffect } from "react";
   import { deleteList, getData } from "../requests";
 import { toast } from "sonner";
+import { RotateCcw } from "lucide-react";
   
   
   function TodoList() {
@@ -42,15 +43,16 @@ import { toast } from "sonner";
     }, [state.priorityFilter, state.completedFilter, state.data])
 
    function deleteItem(id) {
+    dispatch({type: 'DELLETE_ANIMATE', payload: id})
       deleteList(id).then(res => {
-      dispatch({type: 'SET_FILTER', payload: state.data.filter((el)=> el.id !== id)})
+      dispatch({type: 'SET_FILTER', payload: state.filter.filter((el)=> el.id !== id)})
       if(id) {
         toast.success("Muvaffaqiyatli o'chirildi")
       }
     }).catch((err) => {
         toast.error(err.message)
     }).finally(() => {
-      
+      dispatch({type: 'DELLETE_ANIMATE', payload: null})
     })
   }
 
@@ -75,10 +77,17 @@ import { toast } from "sonner";
               <p className='w-1/2 text-xl font-bold font-mono'>{`${index +1}. ${item.title}`}</p>
               <p>{item.priority}</p>                
               <p>{item.completed ? 'bajarilgan' : 'bajarilmagan' }</p> 
-              <Button onClick={() => deleteItem(item.id)} variant="destructive">delete</Button>        
+             <Button onClick={() => deleteItem(item.id)} variant="destructive" className="relative">
+                {state.delAnimate === item.id && (
+                  <RotateCcw className="animate-spin absolute" />
+                )}
+                <span className={state.delAnimate === item.id ? "opacity-50 pl-5" : ""}>
+                  Delete
+                </span>
+              </Button>
+       
           </div>
-        })) : <p className="text-center mt-10 font-bold text-4xl">{!state.loading && `Malumot yo'q`}</p>}
-                 
+        })) : <p className="text-center mt-10 font-bold text-4xl">{!state.loading ? `Malumot yo'q` : ''}</p>}
         {state.haveData && state.filter.length && <div className="flex justify-center my-5"><Button onClick={handleMoreList} variant="ghost">More view</Button></div>}
       </div> 
     )

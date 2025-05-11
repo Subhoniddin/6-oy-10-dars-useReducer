@@ -8,6 +8,7 @@ const initialValue = {
   skip: 0,
   haveData: true,
   loading: false,
+  delAnimate: null,
 }
 
 const reducer = (state, {type, payload}) => {
@@ -26,6 +27,8 @@ const reducer = (state, {type, payload}) => {
           return {...state, haveData: false}
       case 'loading':
           return {...state, loading: !state.loading}
+      case 'DELLETE_ANIMATE':
+          return {...state, delAnimate: payload}
       default:
         return state
     }
